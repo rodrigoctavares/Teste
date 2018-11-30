@@ -99,14 +99,6 @@ public class HomeActivity extends AppCompatActivity implements CriarPautaFragmen
 
                     adapter.setPautaList(pautaList);
 
-//                    for (Pauta pauta2 : pautaList) {
-////                        pauta.setTitulo(pauta2.getTitulo());
-////                        pauta.setDescricao(pauta2.getDescricao());
-////                        pauta.setDetalhe(pauta2.getDetalhe());
-//                        adapter.addPauta(pauta2);
-//                        adapter.notifyDataSetChanged();
-//                    }
-
                 }
             }
 
@@ -143,7 +135,7 @@ public class HomeActivity extends AppCompatActivity implements CriarPautaFragmen
     }
 
     private void enviarFireBase(Pauta pauta) {
-        //pautaListFb.add(pauta);
+
         myRef.push().setValue(pauta);
 
     }
