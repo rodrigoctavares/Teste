@@ -33,6 +33,7 @@ public class RecyclerViewPautaAdapter extends RecyclerView.Adapter<RecyclerViewP
 
     public void setPautaList(List<Pauta> pautaList) {
         this.pautaList = pautaList;
+        notifyDataSetChanged();
     }
 
     @NonNull
