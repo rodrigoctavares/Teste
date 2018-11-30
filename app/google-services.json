@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1010096434686",
+    "firebase_url": "https://capptan-9b601.firebaseio.com",
+    "project_id": "capptan-9b601",
+    "storage_bucket": "capptan-9b601.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010096434686:android:870e5d78f85c0a24",
+        "android_client_info": {
+          "package_name": "com.asterodds.capptanrodrigoct"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1010096434686-q1rhb4r5gb52nendt1ls0slrfsseai5d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.asterodds.capptanrodrigoct",
+            "certificate_hash": "b154b49d9fd58c1f1ddf5b38ca3267125f599461"
+          }
+        },
+        {
+          "client_id": "1010096434686-7gtqln8rp5cgvd12cs39d16f2ficdrhj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeAaYGVBdvq3k-4ZIVWJUrSuzzaV5Ogy0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1010096434686-7gtqln8rp5cgvd12cs39d16f2ficdrhj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
