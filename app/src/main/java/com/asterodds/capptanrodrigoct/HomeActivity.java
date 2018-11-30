@@ -13,28 +13,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.asterodds.capptanrodrigoct.adapter.RecyclerViewPautaAdapter;
 import com.asterodds.capptanrodrigoct.model.Pauta;
-import com.asterodds.capptanrodrigoct.model.Retorno;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,8 +39,14 @@ public class HomeActivity extends AppCompatActivity implements CriarPautaFragmen
     private RecyclerView recyclerView;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
-    private TextView email,senha;
-    private List<Pauta> pautaListFb = new ArrayList<>();
+    private Pauta pauta;
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.notifyDataSetChanged();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +54,14 @@ public class HomeActivity extends AppCompatActivity implements CriarPautaFragmen
         setContentView(R.layout.activity_home);
 
 
+
         mAuth = FirebaseAuth.getInstance();
 
         myRef = database.getReference("users/" + mAuth.getCurrentUser().getUid());
 
         setupRecyclerView();
-
         receberFireBase();
+
 
         FloatingActionButton fab = findViewById(R.id.fab_id);
 
@@ -84,13 +84,30 @@ public class HomeActivity extends AppCompatActivity implements CriarPautaFragmen
 
     private void receberFireBase() {
 
-        database.getReference("users/").addValueEventListener(new ValueEventListener() {
+        database.getReference("users/"+mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               // adapter = dataSnapshot.getValue(Pauta.class);
-                Retorno value = dataSnapshot.getValue(Retorno.class);
-              //  adapter.addPauta();
-                Toast.makeText(HomeActivity.this, "Teste", Toast.LENGTH_SHORT).show();
+
+                GenericTypeIndicator<Map<String, Pauta>> genericTypeIndicator = new GenericTypeIndicator<Map<String, Pauta>>() {
+                };
+                if (dataSnapshot.getValue(genericTypeIndicator) != null) {
+                    Collection<Pauta> userCollection = dataSnapshot.getValue(genericTypeIndicator).values();
+
+                    List<Pauta> pautaList = new ArrayList<>(userCollection);
+
+                    pauta = dataSnapshot.getValue(Pauta.class);
+
+                    adapter.setPautaList(pautaList);
+
+//                    for (Pauta pauta2 : pautaList) {
+////                        pauta.setTitulo(pauta2.getTitulo());
+////                        pauta.setDescricao(pauta2.getDescricao());
+////                        pauta.setDetalhe(pauta2.getDetalhe());
+//                        adapter.addPauta(pauta2);
+//                        adapter.notifyDataSetChanged();
+//                    }
+
+                }
             }
 
             @Override
@@ -108,24 +125,25 @@ public class HomeActivity extends AppCompatActivity implements CriarPautaFragmen
         adapter = new RecyclerViewPautaAdapter();
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void criarPauta(Pauta pauta) {
-        adapter.addPauta(pauta);
+
         enviarFireBase(pauta);
 
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
 
         transaction.remove(fragment);
+        adapter.notifyDataSetChanged();
 
         transaction.commit();
     }
 
     private void enviarFireBase(Pauta pauta) {
-        pautaListFb.add(pauta);
+        //pautaListFb.add(pauta);
         myRef.push().setValue(pauta);
 
     }

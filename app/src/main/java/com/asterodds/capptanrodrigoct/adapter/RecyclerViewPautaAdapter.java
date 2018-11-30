@@ -12,20 +12,28 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.asterodds.capptanrodrigoct.R;
 import com.asterodds.capptanrodrigoct.model.Pauta;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewPautaAdapter extends RecyclerView.Adapter<RecyclerViewPautaAdapter.ViewHolder> {
 
-    private List<Pauta> pautaList = new ArrayList<>();
+    public List<Pauta> pautaList = new ArrayList<>();
+    private FirebaseAuth mAuth;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef;
 
     public void setPautaList(List<Pauta> pautaList) {
         this.pautaList = pautaList;
     }
-
-
-
 
     @NonNull
     @Override
@@ -67,22 +75,28 @@ public class RecyclerViewPautaAdapter extends RecyclerView.Adapter<RecyclerViewP
     public void addPauta(Pauta pauta){
         pautaList.add(pauta);
         notifyItemChanged(getItemCount());
+        notifyDataSetChanged();
     }
 
     public void deleteAll() {
         pautaList.clear();
         notifyDataSetChanged();
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/"+mAuth.getUid());
+        myRef.removeValue();
     }
 
     public void deletarPauta (Pauta pauta) {
         pautaList.remove(pauta);
         notifyDataSetChanged();
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/"+mAuth.getUid());
+        myRef.removeValue();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView titulo,descricao,detalhe,autor;
         private ImageView excluir;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -92,14 +106,17 @@ public class RecyclerViewPautaAdapter extends RecyclerView.Adapter<RecyclerViewP
             detalhe = itemView.findViewById(R.id.text_view_detalhes_id);
             autor = itemView.findViewById(R.id.text_view_autor_id);
             excluir = itemView.findViewById(R.id.image_view_delete_id);
+            mAuth = FirebaseAuth.getInstance();
+
         }
 
         public void bind(final Pauta pauta) {
 
             titulo.setText(pauta.getTitulo());
-            descricao.setText(pauta.getDescricao());
-            detalhe.setText(pauta.getDetalhe());
-            autor.setText(pauta.getAutor());
+            descricao.setText("Descrição: "+"\n"+pauta.getDescricao());
+            detalhe.setText("Detalhe: "+"\n"+pauta.getDetalhe());
+            FirebaseUser user = mAuth.getCurrentUser();
+            autor.setText(user.getDisplayName());
 
 
         }
